@@ -2,12 +2,14 @@
 # app/__init__.py
 
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from config import app_config
 
+cp = CSRFProtect()
 db = SQLAlchemy()
 lm = LoginManager()
 
@@ -17,6 +19,7 @@ def create_app(config_name):
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
 
+    cp.init_app(app)
     db.init_app(app)
     lm.init_app(app)
     lm.login_message = "You must be logged in to access this page."

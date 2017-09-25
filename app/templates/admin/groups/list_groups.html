@@ -1,7 +1,7 @@
 <!-- app/templates/admin/tools/list_tools.html -->
 
 {% extends 'base.html' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %} {{ title }} {% endblock %}
 {% block main %}
     <div>
         <h1>{{ title }}</h1>
@@ -25,7 +25,7 @@
                         <a href="#">Edit</a>
                     </td>
                     <td>
-                        <a href="#">Delete</a>
+                        <a href="{{ url_for('admin.delete_group', id=group.id) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

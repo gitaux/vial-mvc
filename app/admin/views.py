@@ -99,11 +99,11 @@ def delete_group(id):
         db.session.commit()
         flash('You have successfully deleted the group.')
         return redirect(url_for('admin.list_groups'))
-    return render_template('admin/groups/delete_groups.html',
-                           title="Delete Group",
-                           action='Delete',
-                           group=group,
-                           form=form)
+    return render_template('admin/groups/delete_group.html',
+                          title="Delete Group",
+                          action='Delete',
+                          group=group,
+                          form=form)
 
 
 @admin.route('/tools', methods=['GET', 'POST'])

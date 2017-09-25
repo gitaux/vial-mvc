@@ -6,12 +6,27 @@ class Config(object):
     """
     Common configurations
     """
-    # Put any configurations here that are common across all environments
+    WTF_CSRF_ENABLED = True
+    WTF_CSRF_CHECK_DEFAULT = True
+    WTF_CSRF_METHODS = {'POST', 'PUT', 'PATCH', 'DELETE'}
+    WTF_CSRF_HEADERS = ['X-CSRFToken', 'X-CSRF-Token']
+    WTF_CSRF_TIME_LIMIT = 3600
+    WTF_CSRF_SSL_STRICT = True
 
 
 class DevelopmentConfig(Config):
     """
     Development configurations
+    """
+    TESTING = False
+    DEBUG = True
+    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class TestingConfig(Config):
+    """
+    Testing configurations
     """
     TESTING = True
     DEBUG = True
@@ -29,4 +44,5 @@ class ProductionConfig(Config):
 
 
 app_config = {'development':  DevelopmentConfig,
+              'testing': TestingConfig,
               'production':   ProductionConfig}
