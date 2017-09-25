@@ -1,0 +1,40 @@
+<!-- app/templates/admin/groups/list_groups.html -->
+
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+    <div>
+        <h1>{{ title }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Target</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                    <th>Execute</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for tool in tools %}
+                <tr>
+                    <td>{{ tool.name }}</td>
+                    <td>{{ tool.description }}</td>
+                    <td>{{ tool.target }}</td>
+                    <td>
+                        <a href="#">Edit</a>
+                    </td>
+                    <td>
+                        <a href="#">Delete</a>
+                    </td>
+                    <td>
+                        <a href="#">Execute</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('admin.add_tool') }}">Add Tool</a>
+    </div>
+{% endblock %}

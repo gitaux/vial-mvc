@@ -1,0 +1,16 @@
+<!-- app/templates/auth/login.html -->
+
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block main %}
+    <div>
+        <h1>{{ title }}</h1>
+        <form method="POST" name="login" action="">
+            <p>{{ form.csrf_token }}</p>
+            <p>{{ form.hidden_tag }}</p>
+            <p>{{ form.email.label }} {{ form.email(size=20) }}</p>
+            <p>{{ form.password.label }} {{ form.password(size=20) }}</p>
+            <input type="submit" value="Login">
+        </form>
+    </div>
+{% endblock %}
