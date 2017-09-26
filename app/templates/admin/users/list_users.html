@@ -1,0 +1,42 @@
+<!-- app/templates/admin/users/list_users.html -->
+
+{% extends 'base.html' %}
+{% block title %} {{ title }} {% endblock %}
+{% block main %}
+    <div>
+        <h1>{{ title }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Group</th>
+                    <th>Role</th>
+                    <th>Admin</th>
+                    <th>Assign</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.last_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.group }}</td>
+                    <td>{{ user.role }}</td>
+                    <td>{{ user.is_admin }}</td>
+                    <td><a>assign</a></td>
+                    <td><a>edit</a></td>
+                    <td><a>delete</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('admin.add_group') }}">Add Group</a>
+    </div>
+{% endblock %}

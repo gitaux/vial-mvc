@@ -1,9 +1,16 @@
 <!-- app/templates/admin/groups/edit_group.html -->
 
 {% extends 'base.html' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %} {{ title }} {% endblock %}
 {% block main %}
     <div>
         <h1>{{ title }}</h1>
+        <form method="POST" name="edit_group" action="">
+            <p>{{ form.csrf_token }}</p>
+            <p>{{ form.hidden_tag }}</p>
+            <p>{{ form.name.label }} {{ form.name(size=20) }}</p>
+            <p>{{ form.description.label }} {{ form.description(size=20) }}</p>
+            <input type="submit" value="Edit">
+        </form>
     </div>
 {% endblock %}

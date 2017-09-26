@@ -5,9 +5,9 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import admin
-from forms import GroupForm, RoleForm, ToolForm
+from forms import GroupForm, RoleForm, ToolForm, UserAssignForm
 from .. import db
-from ..models import Group, Role, Tool
+from ..models import Group, Role, Tool, User
 
 
 def check_admin():
@@ -41,7 +41,6 @@ def add_group():
     :return:
     """
     check_admin()
-    add_group = True
     form = GroupForm()
     if form.validate_on_submit():
         group = Group(name=form.name.data,
@@ -51,11 +50,11 @@ def add_group():
             db.session.commit()
             flash('You have successfully added a new group.')
         except:
+            db.session.rollback()
             flash('Failed to add the group.')
         return redirect(url_for('admin.list_groups'))
     return render_template('admin/groups/add_group.html',
                            title='Add Group',
-                           add_group=add_group,
                            action='Add',
                            form=form)
 
@@ -79,6 +78,7 @@ def edit_group(id):
             db.session.commit()
             flash('You have successfully edited the group.')
         except:
+            db.session.rollback()
             flash('Failed to edit the group.')
         return redirect(url_for('admin.list_groups'))
     form.description.data = group.description
@@ -107,6 +107,7 @@ def delete_group(id):
             db.session.commit()
             flash('You have successfully deleted the group.')
         except:
+            db.session.rollback()
             flash('failed to delete the group.')
         return redirect(url_for('admin.list_groups'))
     return render_template('admin/groups/delete_group.html',
@@ -147,6 +148,7 @@ def add_role():
             db.session.commit()
             flash('You have successfully added a new role.')
         except:
+            db.session.rollback()
             flash('Error: role name already exists.')
         return redirect(url_for('admin.list_roles'))
     return render_template('admin/roles/add_role.html',
@@ -173,6 +175,7 @@ def edit_role(id):
             db.session.commit()
             flash('You have successfully edited the role.')
         except:
+            db.session.rollback()
             flash('failed to edit the role.')
         return redirect(url_for('admin.list_roles'))
     form.description.data = role.description
@@ -199,6 +202,7 @@ def delete_role(id):
             db.session.commit()
             flash('You have successfully deleted the role.')
         except:
+            db.session.rollback()
             flash('Failed to delete the role.')
         return redirect(url_for('admin.list_roles'))
     return render_template('admin/roles/delete_role.html',
@@ -240,6 +244,7 @@ def add_tool():
             db.session.commit()
             flash('You have successfully added a new tool.')
         except:
+            db.session.rollback()
             flash('Failed to add the tool.')
         return redirect(url_for('admin.list_tools'))
     return render_template('admin/tools/add_tool.html',
@@ -268,6 +273,7 @@ def edit_tool(id):
             db.session.commit()
             flash('Successfully edited the tool.')
         except:
+            db.session.rollback()
             flash('Failed to edit the tool')
         return redirect(url_for('admin.list_tools'))
     form.name.data = tool.name
@@ -299,6 +305,7 @@ def delete_tool(id):
             db.session.commit()
             flash('Successfully deleted the tool.')
         except:
+            db.session.rollback()
             flash('Failed to delete to tool.')
         return redirect(url_for('admin.list_tools'))
     form.name.data = tool.name
@@ -308,3 +315,17 @@ def delete_tool(id):
                            title='Delete Tool',
                            tool=tool,
                            form=form)
+
+
+@admin.route('/users')
+@login_required
+def list_users():
+    """
+    List all users.
+    :return:
+    """
+    check_admin()
+    users = User.query.all()
+    return render_template('admin/users/list_users.html',
+                           title='Users',
+                           users=users)

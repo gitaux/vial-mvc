@@ -22,7 +22,7 @@
                     <td>{{ group.description }}</td>
                     <td>{{ group.users.count() }}</td>
                     <td>
-                        <a href="#">Edit</a>
+                        <a href="{{ url_for('admin.edit_group', id=group.id) }}">Edit</a>
                     </td>
                     <td>
                         <a href="{{ url_for('admin.delete_group', id=group.id) }}">Delete</a>
