@@ -24,10 +24,13 @@ def register():
                     first_name=form.first_name.data,
                     last_name=form.last_name.data,
                     password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('You have successfully registered! You may now login.')
-
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('You have successfully registered! You may now login.')
+        except:
+            db.session.fallback()
+            flash('Failed to register new user.')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html',
                            title='Register',
