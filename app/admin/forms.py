@@ -9,13 +9,6 @@ from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from ..models import Group, Role
 
 
-class UserForm(FlaskForm):
-    """
-    From admin to edit and delete users.
-    """
-    pass
-
-
 class UserAssignForm(FlaskForm):
     """
     From admin to assign groups and roles to users.
@@ -41,7 +34,7 @@ class RoleForm(FlaskForm):
     Form admin to add or edit a role.
     """
     name = StringField('Name', validators=[DataRequired()])
-    description = StringField('Name', validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 

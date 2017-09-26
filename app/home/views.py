@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # app/home/views.py
+
 from flask import abort, render_template
 from flask_login import current_user, login_required
 

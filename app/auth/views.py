@@ -19,11 +19,11 @@ def register():
     """
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(form.email.data,
-                    form.name.data,
-                    form.first_name.data,
-                    form.last_name.data,
-                    form.password.data)
+        user = User(email=form.email.data,
+                    name=form.name.data,
+                    first_name=form.first_name.data,
+                    last_name=form.last_name.data,
+                    password=form.password.data)
         db.session.add(user)
         db.session.commit()
         flash('You have successfully registered! You may now login.')

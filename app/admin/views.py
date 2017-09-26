@@ -342,7 +342,7 @@ def assign_user(id):
     check_admin()
     user = User.query.get_or_404(id)
     if user.is_admin:
-        abort(403)
+       abort(403)
     form = UserAssignForm(obj=user)
     if form.validate_on_submit():
         user.group = form.group.data

@@ -27,10 +27,10 @@
                     <td>{{ user.first_name }}</td>
                     <td>{{ user.last_name }}</td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.group }}</td>
-                    <td>{{ user.role }}</td>
+                    <td>{{ user.group.name }}</td>
+                    <td>{{ user.role.name }}</td>
                     <td>{{ user.is_admin }}</td>
-                    <td><a href="{{ url_for('admin.assign_user') }}">assign</a></td>
+                    <td><a href="{{ url_for('admin.assign_user', id=user.id) }}">assign</a></td>
                     <td><a>edit</a></td>
                     <td><a>delete</a></td>
                 </tr>

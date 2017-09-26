@@ -5,5 +5,32 @@
 {% block main %}
     <div>
         <h1>{{ title }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Users</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for role in roles %}
+                <tr>
+                    <td>{{ role.name }}</td>
+                    <td>{{ role.description }}</td>
+                    <td>{{ role.users.count() }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_role', id=role.id) }}">Edit</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin.delete_role', id=role.id) }}">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('admin.add_role') }}">Add Role</a>
     </div>
 {% endblock %}
