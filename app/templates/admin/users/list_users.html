@@ -30,7 +30,7 @@
                     <td>{{ user.group }}</td>
                     <td>{{ user.role }}</td>
                     <td>{{ user.is_admin }}</td>
-                    <td><a>assign</a></td>
+                    <td><a href="{{ url_for('admin.assign_user') }}">assign</a></td>
                     <td><a>edit</a></td>
                     <td><a>delete</a></td>
                 </tr>

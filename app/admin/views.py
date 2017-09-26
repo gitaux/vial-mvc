@@ -329,3 +329,33 @@ def list_users():
     return render_template('admin/users/list_users.html',
                            title='Users',
                            users=users)
+
+
+@admin.route('/users/assign/user-<int:id>', methods=['GET', 'POST'])
+@login_required
+def assign_user(id):
+    """
+    Assign a group and a role to an user.
+    :param id:
+    :return:
+    """
+    check_admin()
+    user = User.query.get_or_404(id)
+    if user.is_admin:
+        abort(403)
+    form = UserAssignForm(obj=user)
+    if form.validate_on_submit():
+        user.group = form.group.data
+        user.role = form.role.data
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Successfully assigned a group and role.')
+        except:
+            db.session.rollback()
+            flash('failed to assign group and role.')
+        return redirect(url_for('admin.list_users'))
+    return render_template('admin/users/assign_user.html',
+                           title='Assign User',
+                           user=user,
+                           form=form)
