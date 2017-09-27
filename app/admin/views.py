@@ -5,7 +5,7 @@ from flask import abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from . import admin
-from forms import GroupForm, RoleForm, ToolForm, UserAssignForm
+from forms import GroupForm, RoleForm, ToolForm, UserForm
 from .. import db
 from ..models import Group, Role, Tool, User
 
@@ -13,7 +13,7 @@ from ..models import Group, Role, Tool, User
 def check_admin():
     """
     Prevent non-admins from accessing the page.
-    :return: 
+    :return:
     """
     if not current_user.is_admin:
         abort(403)
@@ -46,17 +46,17 @@ def add_group():
         group = Group(name=form.name.data,
                       description=form.description.data)
         try:
-            db.session.add(group)
+            db.session.add(group)  # type: Group
             db.session.commit()
             flash('You have successfully added a new group.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to add the group.')
         return redirect(url_for('admin.list_groups'))
     return render_template('admin/groups/add_group.html',
                            title='Add Group',
                            action='Add',
-                           form=form)
+                           form=form)  # type: GroupForm
 
 
 @admin.route('/groups/edit/group-<int:id>', methods=['GET', 'POST'])
@@ -77,7 +77,7 @@ def edit_group(id):
             db.session.add(group)
             db.session.commit()
             flash('You have successfully edited the group.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to edit the group.')
         return redirect(url_for('admin.list_groups'))
@@ -87,7 +87,7 @@ def edit_group(id):
                            title='Edit Group',
                            action='Edit',
                            group=group,
-                           form=form)
+                           form=form)  # type: GroupForm
 
 
 @admin.route('/groups/delete/group-<int:id>', methods=['GET', 'POST'])
@@ -106,7 +106,7 @@ def delete_group(id):
             db.session.delete(group)
             db.session.commit()
             flash('You have successfully deleted the group.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('failed to delete the group.')
         return redirect(url_for('admin.list_groups'))
@@ -114,7 +114,7 @@ def delete_group(id):
                            title="Delete Group",
                            action='Delete',
                            group=group,
-                           form=form)
+                           form=form)  # type: GroupForm
 
 
 @admin.route('/roles')
@@ -147,13 +147,13 @@ def add_role():
             db.session.add(role)
             db.session.commit()
             flash('You have successfully added a new role.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Error: role name already exists.')
         return redirect(url_for('admin.list_roles'))
     return render_template('admin/roles/add_role.html',
                            title='Add Role',
-                           form=form)
+                           form=form)  # type: RoleForm
 
 
 @admin.route('/roles/edit/role-<int:id>', methods=['GET', 'POST'])
@@ -174,7 +174,7 @@ def edit_role(id):
             db.session.add(role)
             db.session.commit()
             flash('You have successfully edited the role.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('failed to edit the role.')
         return redirect(url_for('admin.list_roles'))
@@ -182,7 +182,7 @@ def edit_role(id):
     form.name.data = role.name
     return render_template('admin/roles/edit_role.html',
                            title='Edit Role',
-                           form=form)
+                           form=form)  # type: RoleForm
 
 
 @admin.route('/roles/delete/role-<int:id>', methods=['GET', 'POST'])
@@ -201,15 +201,14 @@ def delete_role(id):
             db.session.delete(role)
             db.session.commit()
             flash('You have successfully deleted the role.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to delete the role.')
         return redirect(url_for('admin.list_roles'))
     return render_template('admin/roles/delete_role.html',
                            title='Delete Role',
                            role=role,
-                           form=form)
-    
+                           form=form)  # type: RoleForm
 
 
 @admin.route('/tools', methods=['GET', 'POST'])
@@ -243,14 +242,14 @@ def add_tool():
             db.session.add(tool)
             db.session.commit()
             flash('You have successfully added a new tool.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to add the tool.')
         return redirect(url_for('admin.list_tools'))
     return render_template('admin/tools/add_tool.html',
                            title='Add Tool',
                            action='Add',
-                           form=form)
+                           form=form)  # type: ToolForm
 
 
 @admin.route('/tools/edit/tool-<int:id>', methods=['GET', 'POST'])
@@ -272,7 +271,7 @@ def edit_tool(id):
             db.session.add(tool)
             db.session.commit()
             flash('Successfully edited the tool.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to edit the tool')
         return redirect(url_for('admin.list_tools'))
@@ -282,7 +281,7 @@ def edit_tool(id):
     return render_template('admin/tools/edit_tool.html',
                            title='Edit Tool',
                            tool=tool,
-                           form=form)
+                           form=form)  # type: ToolForm
 
 
 @admin.route('/tools/delete/tool-<int:id>', methods=['GET', 'POST'])
@@ -304,7 +303,7 @@ def delete_tool(id):
             db.session.delete(tool)
             db.session.commit()
             flash('Successfully deleted the tool.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('Failed to delete to tool.')
         return redirect(url_for('admin.list_tools'))
@@ -314,7 +313,7 @@ def delete_tool(id):
     return render_template('admin/tools/delete_tool.html',
                            title='Delete Tool',
                            tool=tool,
-                           form=form)
+                           form=form)  # type: ToolForm
 
 
 @admin.route('/users')
@@ -331,6 +330,40 @@ def list_users():
                            users=users)
 
 
+@admin.route('/users/edit/user-<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_user(id):
+    """
+    Edit users.
+    :param id:
+    :return:
+    """
+    check_admin()
+    user = User.query.get_or_404(id)
+    form = UserForm(obj=user)
+    if form.validate_on_submit():
+        user.email = form.email.data
+        user.name = form.name.data
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Successfully edited the user.')
+        except AttributeError:
+            db.session.rollback()
+            flash('Failed to edit the user.')
+        return redirect(url_for('admin.list_users'))
+    form.email.data = user.email
+    form.name.data = user.name
+    form.first_name.data = user.first_name
+    form.last_name.data = user.last_name
+    return render_template('admin/users/edit_user.html',
+                           title='Edit User',
+                           user=user,
+                           form=form)  # type: UserForm
+
+
 @admin.route('/users/assign/user-<int:id>', methods=['GET', 'POST'])
 @login_required
 def assign_user(id):
@@ -342,8 +375,8 @@ def assign_user(id):
     check_admin()
     user = User.query.get_or_404(id)
     if user.is_admin:
-       abort(403)
-    form = UserAssignForm(obj=user)
+        abort(403)
+    form = UserForm(obj=user)
     if form.validate_on_submit():
         user.group = form.group.data
         user.role = form.role.data
@@ -351,11 +384,13 @@ def assign_user(id):
             db.session.add(user)
             db.session.commit()
             flash('Successfully assigned a group and role.')
-        except:
+        except AttributeError:
             db.session.rollback()
             flash('failed to assign group and role.')
         return redirect(url_for('admin.list_users'))
+    form.group.data = user.group
+    form.role.data = user.role
     return render_template('admin/users/assign_user.html',
                            title='Assign User',
                            user=user,
-                           form=form)
+                           form=form)  # type: UserForm

@@ -9,7 +9,7 @@ from app import db, lm
 
 class User(UserMixin, db.Model):
     """
-    Create an Employee table.
+    Create an User table.
     """
     __tablename__ = 'users'
 

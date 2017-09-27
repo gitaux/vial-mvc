@@ -31,7 +31,7 @@
                     <td>{{ user.role.name }}</td>
                     <td>{{ user.is_admin }}</td>
                     <td><a href="{{ url_for('admin.assign_user', id=user.id) }}">assign</a></td>
-                    <td><a>edit</a></td>
+                    <td><a href="{{ url_for('admin.edit_user', id=user.id) }}">edit</a></td>
                     <td><a>delete</a></td>
                 </tr>
             {% endfor %}
