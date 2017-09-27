@@ -8,19 +8,19 @@ from wtforms.validators import DataRequired, Email, EqualTo
 from ..models import User
 
 
-class RegistrationForm(FlaskForm):
+class SignUpForm(FlaskForm):
     """
     Form for users to create a new account.
     """
     email = StringField('Email', validators=[DataRequired(),
                                              Email()])
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Nickname', validators=[DataRequired()])
     first_name = StringField('First Name', validators=[DataRequired()])
     last_name = StringField('Last Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(),
                                                      EqualTo('confirm')])
     confirm = PasswordField('Confirm')
-    submit = SubmitField('Register')
+    submit = SubmitField('Sign Up')
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data).first():
@@ -31,11 +31,11 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Username is already in use.')
 
 
-class LoginForm(FlaskForm):
+class SignInForm(FlaskForm):
     """
     Form for users to login.
     """
     email = StringField('Email', validators=[DataRequired(),
                                              Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
+    submit = SubmitField('Sign In')

@@ -22,6 +22,8 @@ class User(UserMixin, db.Model):
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     is_admin = db.Column(db.Boolean, default=False)
+    is_valid = db.Column(db.Boolean, default=False)
+    is_blocked = db.Column(db.Boolean, default=False)
 
     @property
     def password(self):
@@ -52,7 +54,6 @@ class User(UserMixin, db.Model):
         return '<User: %s>' % self.username
 
 
-# Set up user_loader                                                                    
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -97,7 +98,6 @@ class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), unique=True)
     description = db.Column(db.String(200))
-    target = db.Column(db.String(200))
 
     def __repr__(self):
         return '<Tool: %s>' % self.name

@@ -22,8 +22,8 @@ def create_app(config_name):
     cp.init_app(app)
     db.init_app(app)
     lm.init_app(app)
-    lm.login_message = "You must be logged in to access this page."
-    lm.login_view = "auth.login"
+    lm.login_message = "You must sign up to access this page."
+    lm.login_view = "auth.signin"
 
     migrate = Migrate(app, db)
     from app import models

@@ -10,10 +10,8 @@
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
-                    <th>Target</th>
                     <th>Edit</th>
                     <th>Delete</th>
-                    <th>Execute</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,15 +19,11 @@
                 <tr>
                     <td>{{ tool.name }}</td>
                     <td>{{ tool.description }}</td>
-                    <td>{{ tool.target }}</td>
                     <td>
-                        <a href="#">Edit</a>
+                        <a href="{{ url_for('admin.edit_tool', id=tool.id) }}">Edit</a>
                     </td>
                     <td>
-                        <a href="#">Delete</a>
-                    </td>
-                    <td>
-                        <a href="#">Execute</a>
+                        <a href="{{ url_for('admin.delete_tool', id=tool.id) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}

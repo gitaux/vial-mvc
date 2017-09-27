@@ -2,31 +2,34 @@
 # app/home/views.py
 
 from flask import abort, render_template
-from flask_login import current_user, login_required
+from flask_login import current_user
+from flask_login import login_required as signed_session
 
 from . import home
 
 
 @home.route('/')
-def welcome():
+def welcome_home():
     """
     Render the homepage template on the / route
     :return:
     """
     return render_template('home/welcome.html', title='Welcome')
 
-@home.route('/dashboard')
-@login_required
-def dashboard():
+
+@home.route('/home')
+@signed_session
+def user_home():
     """
-    Render the dashboard template on the /dashboard route.
+    Render the frontend template on the /home route.
     :return:
     """
-    return render_template('home/dashboard.html', title='Dashboard')
+    return render_template('home/home.html', title='Home')
 
-@home.route('/admin/dashboard')
-@login_required
-def admin_dashboard():
+
+@home.route('/admin/home')
+@signed_session
+def admin_home():
     if not current_user.is_admin:
         abort(403)
-    return render_template('home/admin_dashboard.html', title='Dashboard')
+    return render_template('home/admin.html', title='Admin')

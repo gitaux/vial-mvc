@@ -2,7 +2,7 @@
 # app/admin/forms.py
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField  # , BooleanField
 from wtforms.validators import DataRequired, Email
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
@@ -49,5 +49,4 @@ class ToolForm(FlaskForm):
     """
     name = StringField('Name', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
-    target = StringField('Target', validators=[DataRequired()])
     submit = SubmitField('Submit')

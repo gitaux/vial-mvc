@@ -2,7 +2,7 @@
 # app/admin/views.py
 
 from flask import abort, flash, redirect, render_template, url_for
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required as signed_session
 
 from . import admin
 from forms import GroupForm, RoleForm, ToolForm, UserForm
@@ -15,12 +15,13 @@ def check_admin():
     Prevent non-admins from accessing the page.
     :return:
     """
+    # if not current_user.is_entitled or not current_user.is_admin:
     if not current_user.is_admin:
         abort(403)
 
 
 @admin.route('/groups', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def list_groups():
     """
     List all groups.
@@ -34,7 +35,7 @@ def list_groups():
 
 
 @admin.route('/groups/add', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def add_group():
     """
     Add a group to the database.
@@ -60,7 +61,7 @@ def add_group():
 
 
 @admin.route('/groups/edit/group-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def edit_group(id):
     """
     Edit a group.
@@ -91,7 +92,7 @@ def edit_group(id):
 
 
 @admin.route('/groups/delete/group-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def delete_group(id):
     """
     Deletes a group from the database.
@@ -100,25 +101,18 @@ def delete_group(id):
     """
     check_admin()
     group = Group.query.get_or_404(id)
-    form = GroupForm(obj=group)
-    if form.validate_on_submit():
-        try:
-            db.session.delete(group)
-            db.session.commit()
-            flash('You have successfully deleted the group.')
-        except AttributeError:
-            db.session.rollback()
-            flash('failed to delete the group.')
-        return redirect(url_for('admin.list_groups'))
-    return render_template('admin/groups/delete_group.html',
-                           title="Delete Group",
-                           action='Delete',
-                           group=group,
-                           form=form)  # type: GroupForm
+    try:
+        db.session.delete(group)
+        db.session.commit()
+        flash('You have successfully deleted the group.')
+    except AttributeError:
+        db.session.rollback()
+        flash('failed to delete the group.')
+    return redirect(url_for('admin.list_groups'))
 
 
 @admin.route('/roles')
-@login_required
+@signed_session
 def list_roles():
     """
     List all roles.
@@ -132,7 +126,7 @@ def list_roles():
 
 
 @admin.route('roles/add', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def add_role():
     """
     Add a role to the database.
@@ -157,7 +151,7 @@ def add_role():
 
 
 @admin.route('/roles/edit/role-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def edit_role(id):
     """
     Edit a role.
@@ -186,7 +180,7 @@ def edit_role(id):
 
 
 @admin.route('/roles/delete/role-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def delete_role(id):
     """
     Delete a role from the database.
@@ -195,24 +189,18 @@ def delete_role(id):
     """
     check_admin()
     role = Role.query.get_or_404(id)
-    form = RoleForm(obj=role)
-    if form.validate_on_submit():
-        try:
-            db.session.delete(role)
-            db.session.commit()
-            flash('You have successfully deleted the role.')
-        except AttributeError:
-            db.session.rollback()
-            flash('Failed to delete the role.')
-        return redirect(url_for('admin.list_roles'))
-    return render_template('admin/roles/delete_role.html',
-                           title='Delete Role',
-                           role=role,
-                           form=form)  # type: RoleForm
+    try:
+        db.session.delete(role)
+        db.session.commit()
+        flash('You have successfully deleted the role.')
+    except AttributeError:
+        db.session.rollback()
+        flash('Failed to delete the role.')
+    return redirect(url_for('admin.list_roles'))
 
 
 @admin.route('/tools', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def list_tools():
     """
     List all tools.
@@ -226,7 +214,7 @@ def list_tools():
 
 
 @admin.route('/tools/add', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def add_tool():
     """
     Add a tool to the database.
@@ -236,8 +224,7 @@ def add_tool():
     form = ToolForm()
     if form.validate_on_submit():
         tool = Tool(name=form.name.data,
-                    description=form.description.data,
-                    target=form.target.data)
+                    description=form.description.data)
         try:
             db.session.add(tool)
             db.session.commit()
@@ -253,7 +240,7 @@ def add_tool():
 
 
 @admin.route('/tools/edit/tool-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def edit_tool(id):
     """
     Edit a tool.
@@ -266,7 +253,6 @@ def edit_tool(id):
     if form.validate_on_submit():
         tool.name = form.name.data
         tool.description = form.description.data
-        tool.target = form.target.data
         try:
             db.session.add(tool)
             db.session.commit()
@@ -277,7 +263,6 @@ def edit_tool(id):
         return redirect(url_for('admin.list_tools'))
     form.name.data = tool.name
     form.description.data = tool.description
-    form.target.data = tool.target
     return render_template('admin/tools/edit_tool.html',
                            title='Edit Tool',
                            tool=tool,
@@ -285,39 +270,27 @@ def edit_tool(id):
 
 
 @admin.route('/tools/delete/tool-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def delete_tool(id):
     """
-    Delete a tool from the database.
+    Delete an tool from the database.
     :param id:
     :return:
     """
     check_admin()
     tool = Tool.query.get_or_404(id)
-    form = ToolForm(obj=tool)
-    if form.validate_on_submit():
-        tool.name = form.name.data
-        tool.description = form.description.data
-        tool.target = form.target.data
-        try:
-            db.session.delete(tool)
-            db.session.commit()
-            flash('Successfully deleted the tool.')
-        except AttributeError:
-            db.session.rollback()
-            flash('Failed to delete to tool.')
-        return redirect(url_for('admin.list_tools'))
-    form.name.data = tool.name
-    form.description.data = tool.description
-    form.target.data = tool.target
-    return render_template('admin/tools/delete_tool.html',
-                           title='Delete Tool',
-                           tool=tool,
-                           form=form)  # type: ToolForm
+    try:
+        db.session.delete(tool)
+        db.session.commit()
+        flash('Successfully deleted the tool.')
+    except AttributeError:
+        db.session.rollback()
+        flash('Failed to delete to tool.')
+    return redirect(url_for('admin.list_tools'))
 
 
 @admin.route('/users')
-@login_required
+@signed_session
 def list_users():
     """
     List all users.
@@ -331,7 +304,7 @@ def list_users():
 
 
 @admin.route('/users/edit/user-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def edit_user(id):
     """
     Edit users.
@@ -365,7 +338,7 @@ def edit_user(id):
 
 
 @admin.route('/users/assign/user-<int:id>', methods=['GET', 'POST'])
-@login_required
+@signed_session
 def assign_user(id):
     """
     Assign a group and a role to an user.
@@ -394,3 +367,25 @@ def assign_user(id):
                            title='Assign User',
                            user=user,
                            form=form)  # type: UserForm
+
+
+@admin.route('/users/delete/user-<int:id>', methods=['GET', 'POST'])
+@signed_session
+def delete_user(id):
+    """
+    Delete an user from the database.
+    :param id:
+    :return:
+    """
+    check_admin()
+    user = User.query.get_or_404(id)
+    if user.is_admin:
+        abort(403)
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        flash('Successfully deleted the user.')
+    except AttributeError:
+        db.session.rollback()
+        flash('Failed to delete the user.')
+    return redirect(url_for('admin.list_users'))
