@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # app/__init__.py
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -30,11 +30,39 @@ def create_app(config_name):
 
     from .admin import admin as admin_blueprint
     app.register_blueprint(admin_blueprint, url_prefix='/admin')
-
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
-
     from .home import home as home_blueprint
     app.register_blueprint(home_blueprint)
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        """
+        Custom error 403 Forbidden.
+        :param error:
+        :return:
+        """
+        return render_template('errors/403.html',
+                               title='403 Forbidden'), 403
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        """
+        Custom error 404 Page not found.
+        :param error:
+        :return:
+        """
+        return render_template('errors/404.html',
+                               title='404 Page not found'), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        """
+        Custom error 500 Internal server error.
+        :param error:
+        :return:
+        """
+        return render_template('errors/500.html',
+                               title='500 Internal server error'), 500
 
     return app

@@ -11,7 +11,7 @@ from app import create_app
 
 
 __project__ = 'Auxillary Flask-App'
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 __author__ = 'Auxillary (gitaux)'
 __repository__ = 'https://github.com/gitaux'
 __copyright__ = 'copyright (c) 2017'
