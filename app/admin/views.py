@@ -15,8 +15,7 @@ def check_admin():
     Prevent non-admins from accessing the page.
     :return:
     """
-    # if not current_user.is_entitled or not current_user.is_admin:
-    if not current_user.is_admin:
+    if not current_user.is_valid and not current_user.is_admin:
         abort(403)
 
 
@@ -49,10 +48,12 @@ def add_group():
         try:
             db.session.add(group)  # type: Group
             db.session.commit()
-            flash('You have successfully added a new group.')
+            flash('You have successfully added a new group: "%s".' %
+                  str(group.name))
         except AttributeError:
             db.session.rollback()
-            flash('Failed to add the group.')
+            flash('Failed to add the group: "%s".' %
+                  str(group.name))
         return redirect(url_for('admin.list_groups'))
     return render_template('admin/groups/add_group.html',
                            title='Add Group',
@@ -77,10 +78,12 @@ def edit_group(id):
         try:
             db.session.add(group)
             db.session.commit()
-            flash('You have successfully edited the group.')
+            flash('You have successfully edited the group: "%s".' %
+                  str(group.name))
         except AttributeError:
             db.session.rollback()
-            flash('Failed to edit the group.')
+            flash('Failed to edit the group: "%s".' %
+                  str(group.name))
         return redirect(url_for('admin.list_groups'))
     form.description.data = group.description
     form.name.data = group.name
@@ -104,10 +107,12 @@ def delete_group(id):
     try:
         db.session.delete(group)
         db.session.commit()
-        flash('You have successfully deleted the group.')
+        flash('You have successfully deleted the group: "%s".' %
+              str(group.name))
     except AttributeError:
         db.session.rollback()
-        flash('failed to delete the group.')
+        flash('failed to delete the group: "%s".' %
+              str(group.name))
     return redirect(url_for('admin.list_groups'))
 
 
@@ -140,10 +145,12 @@ def add_role():
         try:
             db.session.add(role)
             db.session.commit()
-            flash('You have successfully added a new role.')
+            flash('Successfully added a new role: "%s".' %
+                  str(role.name))
         except AttributeError:
             db.session.rollback()
-            flash('Error: role name already exists.')
+            flash('Error: role name already exists: "%s".' %
+                  str(role.name))
         return redirect(url_for('admin.list_roles'))
     return render_template('admin/roles/add_role.html',
                            title='Add Role',
@@ -167,10 +174,12 @@ def edit_role(id):
         try:
             db.session.add(role)
             db.session.commit()
-            flash('You have successfully edited the role.')
+            flash('Successfully edited the role: "%s".' %
+                  str(role.name))
         except AttributeError:
             db.session.rollback()
-            flash('failed to edit the role.')
+            flash('failed to edit the role: "%s".' %
+                  str(role.name))
         return redirect(url_for('admin.list_roles'))
     form.description.data = role.description
     form.name.data = role.name
@@ -192,10 +201,12 @@ def delete_role(id):
     try:
         db.session.delete(role)
         db.session.commit()
-        flash('You have successfully deleted the role.')
+        flash('Successfully deleted the role: "%s".' %
+              str(role.name))
     except AttributeError:
         db.session.rollback()
-        flash('Failed to delete the role.')
+        flash('Failed to delete the role: "%s".' %
+              str(role.name))
     return redirect(url_for('admin.list_roles'))
 
 
@@ -228,10 +239,12 @@ def add_tool():
         try:
             db.session.add(tool)
             db.session.commit()
-            flash('You have successfully added a new tool.')
+            flash('Successfully added a new tool: "%s".' %
+                  str(tool.name))
         except AttributeError:
             db.session.rollback()
-            flash('Failed to add the tool.')
+            flash('Failed to add the tool: "%s".' %
+                  str(tool.name))
         return redirect(url_for('admin.list_tools'))
     return render_template('admin/tools/add_tool.html',
                            title='Add Tool',
@@ -256,10 +269,12 @@ def edit_tool(id):
         try:
             db.session.add(tool)
             db.session.commit()
-            flash('Successfully edited the tool.')
+            flash('Successfully edited the tool: "%s".' %
+                  str(tool.name))
         except AttributeError:
             db.session.rollback()
-            flash('Failed to edit the tool')
+            flash('Failed to edit the tool: "%s".' %
+                  str(tool.name))
         return redirect(url_for('admin.list_tools'))
     form.name.data = tool.name
     form.description.data = tool.description
@@ -282,10 +297,12 @@ def delete_tool(id):
     try:
         db.session.delete(tool)
         db.session.commit()
-        flash('Successfully deleted the tool.')
+        flash('Successfully deleted the tool: "%s".' %
+              str(tool.name))
     except AttributeError:
         db.session.rollback()
-        flash('Failed to delete to tool.')
+        flash('Failed to delete to tool: "%s".' %
+              str(tool.name))
     return redirect(url_for('admin.list_tools'))
 
 
@@ -322,10 +339,12 @@ def edit_user(id):
         try:
             db.session.add(user)
             db.session.commit()
-            flash('Successfully edited the user.')
+            flash('Successfully edited the user: "%s".' %
+                  str(user.name))
         except AttributeError:
             db.session.rollback()
-            flash('Failed to edit the user.')
+            flash('Failed to edit the user: "%s".' %
+                  str(user.name))
         return redirect(url_for('admin.list_users'))
     form.email.data = user.email
     form.name.data = user.name
@@ -351,15 +370,19 @@ def assign_user(id):
         abort(403)
     form = UserForm(obj=user)
     if form.validate_on_submit():
-        user.group = form.group.data
+        user.group = form.group.data  # type: UserForm
         user.role = form.role.data
         try:
             db.session.add(user)
             db.session.commit()
-            flash('Successfully assigned a group and role.')
+            flash('Successfully assigned "%s" to "%s" as "%s".' %
+                  (str(user.name),
+                   str(user.group),
+                   str(user.role)))
         except AttributeError:
             db.session.rollback()
-            flash('failed to assign group and role.')
+            flash('Failed to assign group and role to: "%s".' %
+                  str(user.name))
         return redirect(url_for('admin.list_users'))
     form.group.data = user.group
     form.role.data = user.role
@@ -384,8 +407,10 @@ def delete_user(id):
     try:
         db.session.delete(user)
         db.session.commit()
-        flash('Successfully deleted the user.')
+        flash('Successfully deleted the user: "%s".' %
+              str(user.name))
     except AttributeError:
         db.session.rollback()
-        flash('Failed to delete the user.')
+        flash('Failed to delete the user: "%s".' %
+              str(user.name))
     return redirect(url_for('admin.list_users'))

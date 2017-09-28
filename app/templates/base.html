@@ -3,11 +3,10 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{{ title }} | Novaskill WebApp</title>
+        <title>{{ title }} | {{ __project__ }}</title>
         <meta charset="UTF-8">
-        <meta name="author" content="webmaster@local.localdomain">
-        <meta name="description" content="description of the website">
-        <meta name="copyright" content="copyright from the owner">
+        <meta name="author" content="{{ __author__ }}">
+        <meta name="copyright" content="{{ __copyright__ }}">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
         <link rel="stylesheet/less" type="text/css" href="{{ url_for('static', filename='css/style.less') }}">
         <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
@@ -26,7 +25,11 @@
                         <li><a href="{{ url_for('home.user_home') }}">Home</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('auth.signout') }}">Sign Out</a></li>
-                    <li><a>Hi, {{ current_user.name }}!</a></li>
+                    {% if not current_user.is_admin %}
+                        <li><a>Hi, {{ current_user.name }}!</a></li>
+                    {% else %}
+                        <li><a>Hi, {{ current_user.name }} [admin]</a></li>
+                    {% endif %}
                 {% else %}
                     <li><a href="{{ url_for('home.welcome_home') }}">Home</a></li>
                     <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
@@ -49,7 +52,7 @@
         </div>
         <footer>
             <div>
-                <p>Copyright (c) 2017</p>
+                <p>{{ __copyright__ }}</p>
             </div>
         </footer>
     </body>
