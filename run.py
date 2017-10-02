@@ -10,7 +10,7 @@ import os
 from app import create_app
 
 
-__version__ = '0.1.4'
+__version__ = '0.1.5'
 
 config_name = os.getenv('FLASK_CONFIG')
 app = create_app(config_name='development')

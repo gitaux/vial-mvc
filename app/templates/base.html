@@ -1,5 +1,5 @@
 <!-- app/templates/base.html -->
-
+{% from 'macros.html' import hello, copyright, nav_link with context %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,32 +12,26 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
-        <link rel="stylesheet/less" type="text/css" href="{{ url_for('static', filename='css/style.less') }}">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
     </head>
     <body>
         <div>
                 <ul>
                 {% if current_user.is_authenticated %}
                     {% if current_user.is_admin %}
-                        <li><a href="{{ url_for('home.admin') }}">Admin</a></li>
-                        <li><a href="{{ url_for('admin.groups') }}">Groups</a></li>
-                        <li><a href="{{ url_for('admin.roles') }}">Roles</a></li>
-                        <li><a href="{{ url_for('admin.users') }}">Users</a></li>
-                        <li><a href="{{ url_for('admin.tools') }}">Tools</a></li>
+                        {{ nav_link('home.admin', 'Admin') }}
+                        {{ nav_link('admin.groups', 'Groups') }}
+                        {{ nav_link('admin.roles', 'Roles') }}
+                        {{ nav_link('admin.users', 'Users') }}
+                        {{ nav_link('admin.tools', 'Tools') }}
                     {% else %}
-                        <li><a href="{{ url_for('home.start') }}">Home</a></li>
+                        {{ nav_link('home.start', 'Start') }}
                     {% endif %}
-                    <li><a href="{{ url_for('auth.signout') }}">Sign Out</a></li>
-                    {% if not current_user.is_admin %}
-                        <li><a>Hi, {{ current_user.name }}!</a></li>
-                    {% else %}
-                        <li><a>Hi, {{ current_user.name }} [admin]</a></li>
-                    {% endif %}
+                    {{ hello() }}
+                    {{ nav_link('auth.signout', 'Sign Out') }}
                 {% else %}
-                    <li><a href="{{ url_for('home.welcome') }}">Home</a></li>
-                    <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
-                    <li><a href="{{ url_for('auth.signin') }}">Sign In</a></li>
+                    {{ nav_link('home.welcome', 'Welcome') }}
+                    {{ nav_link('auth.signup', 'Sign Up') }}
+                    {{ nav_link('auth.signin', 'Sign In') }}
                 {% endif %}
             </ul>
         </div>
@@ -56,7 +50,7 @@
         </div>
         <footer>
             <div>
-                <p>copyright (c) 2017</p>
+                <p>{{ copyright('2017', 'Auxillary') }}</p>
             </div>
         </footer>
     </body>

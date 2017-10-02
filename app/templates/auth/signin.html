@@ -7,9 +7,8 @@
         <h1>{{ title }}</h1>
         <form method="POST" name="signin" action="">
             <p>{{ form.csrf_token }}</p>
-            <p>{{ form.hidden_tag }}</p>
-            <p>{{ form.email.label }} <br /> {{ form.email(size=20) }}</p>
-            <p>{{ form.password.label }} <br /> {{ form.password(size=20) }}</p>
+            <p>{{ form.email.label }} <br /> {{ form.email(size=50) }}</p>
+            <p>{{ form.password.label }} <br /> {{ form.password(size=50) }}</p>
             <input type="submit" value="Sign In">
         </form>
     </div>

@@ -7,9 +7,8 @@
         <h1>{{ title }}</h1>
         <form method="POST" name="add_group" action="">
             <p>{{ form.csrf_token }}</p>
-            <p>{{ form.hidden_tag }}</p>
-            <p>{{ form.name.label }} <br /> {{ form.name(size=20) }}</p>
-            <p>{{ form.description.label }} <br /> {{ form.description(size=20) }}</p>
+            <p>{{ form.name.label }} <br /> {{ form.name(size=50) }}</p>
+            <p>{{ form.description.label }} <br /> {{ form.description(size=50) }}</p>
             <input type="submit" value="Add">
         </form>
     </div>

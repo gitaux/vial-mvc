@@ -1,5 +1,5 @@
-# Auxillary Flask App
-> Version: 0.1.4
+# Auxillary App
+> Version: 0.1.5
 
 1. git clone repository
 2. create virtual environment

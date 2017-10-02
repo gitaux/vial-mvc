@@ -1,0 +1,18 @@
+{# Hello current username#}
+{% macro hello() %}
+    <li><a>Hello, {{ current_user.name }}!</a></li>
+{% endmacro %}
+
+{# Copyright year & owner #}
+{% macro copyright(year, owner) %}
+    <p>copyright &copy; {{ year }} {{ owner }}</p>
+{% endmacro %}
+
+{# Navigation link #}
+{% macro nav_link(endpoint, name) %}
+{% if request.endpoint.endswith(endpoint) %}
+    <li class="active"><a href="{{ url_for(endpoint) }}">{{ name }}</a></li>
+{% else %}
+    <li><a href="{{ url_for(endpoint) }}">{{ name }}</a></li>
+{% endif %}
+{% endmacro %}
