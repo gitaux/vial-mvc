@@ -8,10 +8,13 @@
         <form method="POST" name="edit_user" action="">
             <p>{{ form.csrf_token }}</p>
             <p>{{ form.hidden_tag }}</p>
-            <p>{{ form.email.label }} {{ form.email(size=20) }}</p>
-            <p>{{ form.name.label }} {{ form.name(size=20) }}</p>
-            <p>{{ form.first_name.label }} {{ form.first_name(size=20) }}</p>
-            <p>{{ form.last_name.label }} {{ form.last_name(size=20) }}</p>
+            <p>{{ form.email.label }} <br /> {{ form.email(size=20) }}</p>
+            <p>{{ form.name.label }} <br /> {{ form.name(size=20) }}</p>
+            <p>{{ form.first_name.label }} <br /> {{ form.first_name(size=20) }}</p>
+            <p>{{ form.last_name.label }} <br /> {{ form.last_name(size=20) }}</p>
+            <p>{{ form.is_admin.label }} ̣<br /> {{ form.is_admin }}</p>
+            <p>{{ form.is_valid.label }} <br /> {{ form.is_valid }}</p>
+            <p>{{ form.is_blocked.label }} <br /> {{ form.is_blocked }}</p>
             <input type="submit" value="Edit">
         </form>
     </div>

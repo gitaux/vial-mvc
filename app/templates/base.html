@@ -3,26 +3,30 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>{{ title }} | {{ __project__ }}</title>
+        <title>{{ title }} | Auxillary</title>
         <meta charset="UTF-8">
-        <meta name="author" content="{{ __author__ }}">
-        <meta name="copyright" content="{{ __copyright__ }}">
+        <meta name="license" content="MIT License">
+        <meta name="author" content="Roland Lucien Maxand">
+        <meta name="copyright" content="copyright (c) 2017">
+        <meta name="repository" content="https://github.com/gitaux">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
         <link rel="stylesheet/less" type="text/css" href="{{ url_for('static', filename='css/style.less') }}">
         <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
     </head>
     <body>
         <div>
-            <ul>
+                <ul>
                 {% if current_user.is_authenticated %}
                     {% if current_user.is_admin %}
-                        <li><a href="{{ url_for('home.admin_home') }}">Admin</a></li>
-                        <li><a href="{{ url_for('admin.list_groups') }}">Groups</a></li>
-                        <li><a href="{{ url_for('admin.list_roles') }}">Roles</a></li>
-                        <li><a href="{{ url_for('admin.list_users') }}">Users</a></li>
-                        <li><a href="{{ url_for('admin.list_tools') }}">Tools</a></li>
+                        <li><a href="{{ url_for('home.admin') }}">Admin</a></li>
+                        <li><a href="{{ url_for('admin.groups') }}">Groups</a></li>
+                        <li><a href="{{ url_for('admin.roles') }}">Roles</a></li>
+                        <li><a href="{{ url_for('admin.users') }}">Users</a></li>
+                        <li><a href="{{ url_for('admin.tools') }}">Tools</a></li>
                     {% else %}
-                        <li><a href="{{ url_for('home.user_home') }}">Home</a></li>
+                        <li><a href="{{ url_for('home.start') }}">Home</a></li>
                     {% endif %}
                     <li><a href="{{ url_for('auth.signout') }}">Sign Out</a></li>
                     {% if not current_user.is_admin %}
@@ -31,7 +35,7 @@
                         <li><a>Hi, {{ current_user.name }} [admin]</a></li>
                     {% endif %}
                 {% else %}
-                    <li><a href="{{ url_for('home.welcome_home') }}">Home</a></li>
+                    <li><a href="{{ url_for('home.welcome') }}">Home</a></li>
                     <li><a href="{{ url_for('auth.signup') }}">Sign Up</a></li>
                     <li><a href="{{ url_for('auth.signin') }}">Sign In</a></li>
                 {% endif %}
@@ -52,7 +56,7 @@
         </div>
         <footer>
             <div>
-                <p>{{ __copyright__ }}</p>
+                <p>copyright (c) 2017</p>
             </div>
         </footer>
     </body>

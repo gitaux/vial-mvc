@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # tests.py
 
 import os
@@ -21,29 +21,55 @@ class TestBase(TestCase):
     def create_app(self):
         config_name = 'testing'
         app = create_app(config_name)
-        app.config.update(
-                 SQLALCHEMY_DATABASE_URI='sqlite:///%s' %
-                                         str(os.path.join(basedir,
-                                                          'testing.sqlite'))
-        )
+        app.config.update(SQLALCHEMY_DATABASE_URI='sqlite:///%s' %
+                                                  str(os.path.join(basedir,'db_testing.sqlite')))
         return app
 
-    def set_up(self):
+    def setUp(self):
         """
         Will be called before every test.
         :return:
         """
         db.create_all()
-        test_admin = User(name='test_admin',
-                          password='admin2017',
-                          is_admin=True)
-        test_user = User(name='test_user',
-                         password='user2017')
-        db.session.add(test_admin)
-        db.session.add(test_user)
+        test_user_not_admin_not_valid_not_blocked = User(email='test1@test.test',
+                                                         name='test1',
+                                                         first_name='tester1',
+                                                         last_name='tester1',
+                                                         password='test1',
+                                                         is_admin=False,
+                                                         is_valid=False,
+                                                         is_blocked=False)
+        test_user_admin_not_valid_not_blocked = User(email='test2@test.test',
+                                                     name='test2',
+                                                     first_name='tester2',
+                                                     last_name='tester2',
+                                                     password='test2',
+                                                     is_admin=True,
+                                                     is_valid=False,
+                                                     is_blocked=False)
+        test_user_admin_valid_not_blocked = User(email='test3@test.test',
+                                                 name='test3',
+                                                 first_name='tester3',
+                                                 last_name='tester3',
+                                                 password='test3',
+                                                 is_admin=True,
+                                                 is_valid=True,
+                                                 is_blocked=False)
+        test_user_admin_valid_blocked = User(email='test4@test.test',
+                                             name='test4',
+                                             first_name='tester4',
+                                             last_name='tester4',
+                                             password='test4',
+                                             is_admin=True,
+                                             is_valid=True,
+                                             is_blocked=True)
+        db.session.add(test_user_not_admin_not_valid_not_blocked)
+        db.session.add(test_user_admin_not_valid_not_blocked)
+        db.session.add(test_user_admin_valid_not_blocked)
+        db.session.add(test_user_admin_valid_blocked)
         db.session.commit()
 
-    def tear_down(self):
+    def tearDown(self):
         """
         Will be called after every test.
         :return:
@@ -61,7 +87,7 @@ class TestModel(TestBase):
         Test number of records in User table.
         :return:
         """
-        self.assertEqual(User.query.count(), 2)
+        self.assertEqual(User.query.count(), 1)
 
     def test_group_model(self):
         """
@@ -71,7 +97,7 @@ class TestModel(TestBase):
         group = Group(name='Tester Group', description='The Tester Group')
         db.session.add(group)
         db.session.commit()
-        self.assertEqual(Group.query.count(), 1)
+        self.assertEqual(Group.query.count(), 2)
 
     def test_role_model(self):
         """
@@ -81,7 +107,7 @@ class TestModel(TestBase):
         role = Role(name='Test Role', description='The Test Role')
         db.session.add(role)
         db.session.commit()
-        self.assertEqual(Role.query.count(), 1)
+        self.assertEqual(Role.query.count(), 2)
 
     def test_tool_model(self):
         """
@@ -89,6 +115,9 @@ class TestModel(TestBase):
         :return:
         """
         tool = Tool(name='Test Tool', description='The Test Tool')
+        db.session.add(tool)
+        db.session.commit()
+        self.assertEqual(Tool.query.count(), 2)
 
 
 class TestView(TestBase):
@@ -100,7 +129,7 @@ class TestView(TestBase):
         Test the welcome page is accessible without signin.
         :return:
         """
-        response = self.client.get(url_for('home.welcome_home'))
+        response = self.client.get(url_for('home.welcome'))
         self.assertEqual(response.status_code, 200)
 
     def test_signin_view(self):
@@ -129,7 +158,7 @@ class TestView(TestBase):
         and redirects to signin page then to user page.
         :return:
         """
-        target_url = url_for('home.user_home')
+        target_url = url_for('home.start')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -141,7 +170,7 @@ class TestView(TestBase):
         and redirects to signin page then to admin page.
         :return:
         """
-        target_url = url_for('home.admin_home')
+        target_url = url_for('home.admin')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -153,7 +182,7 @@ class TestView(TestBase):
         and redirects to signin page then to groups page.
         :return:
         """
-        target_url = url_for('admin.list_groups')
+        target_url = url_for('admin.groups')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -165,7 +194,7 @@ class TestView(TestBase):
         and redirects to signin page then to roles page.
         :return:
         """
-        target_url = url_for('admin.list_roles')
+        target_url = url_for('admin.roles')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -177,7 +206,7 @@ class TestView(TestBase):
         and redirects to signin page then to users page.
         :return:
         """
-        target_url = url_for('admin.list_users')
+        target_url = url_for('admin.users')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -189,7 +218,7 @@ class TestView(TestBase):
         and redirects to signin page then to tools page.
         :return:
         """
-        target_url = url_for('admin.list_tools')
+        target_url = url_for('admin.tools')
         redirect_url = url_for('auth.signin', next=target_url)
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 302)
@@ -211,7 +240,7 @@ class TestError(TestBase):
             abort(403)
         response = self.client.get('/403')
         self.assertEqual(response.status_code, 403)
-        self.assertTrue('403 Error' in response.data)
+        self.assertTrue('403' in response.data)
 
     def test_404_page_not_found_error(self):
         """
@@ -224,7 +253,7 @@ class TestError(TestBase):
             abort(404)
         response = self.client.get('/404')
         self.assertEqual(response.status_code, 404)
-        self.assertTrue('404 Error' in response.data)
+        self.assertTrue('404' in response.data)
 
     def test_500_internal_server_error(self):
         """
@@ -237,7 +266,7 @@ class TestError(TestBase):
             abort(500)
         response = self.client.get('/500')
         self.assertEqual(response.status_code, 500)
-        self.assertTrue('500 Error' in response.data)
+        self.assertTrue('500' in response.data)
 
 
 if __name__ == '__main__':

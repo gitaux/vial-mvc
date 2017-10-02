@@ -1,7 +1,7 @@
-<!-- app/templates/admin/tools/list_tools.html -->
+<!-- app/templates/admin/tools/tools.html -->
 
 {% extends 'base.html' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %} {{ title }} {% endblock %}
 {% block main %}
     <div>
         <h1>{{ title }}</h1>
@@ -10,25 +10,27 @@
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
+                    <th>Users</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
-            {% for tool in tools %}
+            {% for group in groups %}
                 <tr>
-                    <td>{{ tool.name }}</td>
-                    <td>{{ tool.description }}</td>
+                    <td>{{ group.name }}</td>
+                    <td>{{ group.description }}</td>
+                    <td>{{ group.users.count() }}</td>
                     <td>
-                        <a href="{{ url_for('admin.edit_tool', id=tool.id) }}">Edit</a>
+                        <a href="{{ url_for('admin.edit_group', id=group.id) }}">Edit</a>
                     </td>
                     <td>
-                        <a href="{{ url_for('admin.delete_tool', id=tool.id) }}">Delete</a>
+                        <a href="{{ url_for('admin.delete_group', id=group.id) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
-        <a href="{{ url_for('admin.add_tool') }}">Add Tool</a>
+        <a href="{{ url_for('admin.add_group') }}">Add Group</a>
     </div>
 {% endblock %}

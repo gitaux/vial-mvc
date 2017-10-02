@@ -51,9 +51,9 @@ def signin():
         if user is not None and user.verify_password(form.password.data):
             signin_user(user)
             if user.is_admin:
-                return redirect(url_for('home.admin_home'))
+                return redirect(url_for('home.admin'))
             else:
-                return redirect(url_for('home.user_home'))
+                return redirect(url_for('home.start'))
         else:
             flash('Invalid email or password.')
     return render_template('auth/signin.html',
@@ -70,4 +70,4 @@ def signout():
     """
     signout_user()
     flash('You successfully signed out.')
-    return redirect(url_for('home.welcome_home'))
+    return redirect(url_for('home.welcome'))

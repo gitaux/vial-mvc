@@ -10,11 +10,7 @@ import os
 from app import create_app
 
 
-__project__ = 'Auxillary Flask-App'
-__version__ = '0.1.3'
-__author__ = 'Auxillary (gitaux)'
-__repository__ = 'https://github.com/gitaux'
-__copyright__ = 'copyright (c) 2017'
+__version__ = '0.1.4'
 
 config_name = os.getenv('FLASK_CONFIG')
 app = create_app(config_name='development')

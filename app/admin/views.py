@@ -21,14 +21,14 @@ def check_admin():
 
 @admin.route('/groups', methods=['GET', 'POST'])
 @signed_session
-def list_groups():
+def groups():
     """
     List all groups.
     :return:
     """
     check_admin()
     groups = Group.query.all()
-    return render_template('admin/groups/list_groups.html',
+    return render_template('admin/groups/groups.html',
                            title='Groups',
                            groups=groups)
 
@@ -46,19 +46,17 @@ def add_group():
         group = Group(name=form.name.data,
                       description=form.description.data)
         try:
-            db.session.add(group)  # type: Group
+            db.session.add(group)
             db.session.commit()
-            flash('You have successfully added a new group: "%s".' %
-                  str(group.name))
-        except AttributeError:
+            flash('Successfully added a new group: "%s".' % str(group.name))
+        except:
             db.session.rollback()
-            flash('Failed to add the group: "%s".' %
-                  str(group.name))
-        return redirect(url_for('admin.list_groups'))
+            flash('Failed to add the group: "%s".' % str(group.name))
+        return redirect(url_for('admin.groups'))
     return render_template('admin/groups/add_group.html',
                            title='Add Group',
                            action='Add',
-                           form=form)  # type: GroupForm
+                           form=form)
 
 
 @admin.route('/groups/edit/group-<int:id>', methods=['GET', 'POST'])
@@ -78,20 +76,18 @@ def edit_group(id):
         try:
             db.session.add(group)
             db.session.commit()
-            flash('You have successfully edited the group: "%s".' %
-                  str(group.name))
-        except AttributeError:
+            flash('You have successfully edited the group: "%s".' % str(group.name))
+        except:
             db.session.rollback()
-            flash('Failed to edit the group: "%s".' %
-                  str(group.name))
-        return redirect(url_for('admin.list_groups'))
+            flash('Failed to edit the group: "%s".' % str(group.name))
+        return redirect(url_for('admin.groups'))
     form.description.data = group.description
     form.name.data = group.name
     return render_template('admin/groups/edit_group.html',
                            title='Edit Group',
                            action='Edit',
                            group=group,
-                           form=form)  # type: GroupForm
+                           form=form)
 
 
 @admin.route('/groups/delete/group-<int:id>', methods=['GET', 'POST'])
@@ -107,25 +103,23 @@ def delete_group(id):
     try:
         db.session.delete(group)
         db.session.commit()
-        flash('You have successfully deleted the group: "%s".' %
-              str(group.name))
-    except AttributeError:
+        flash('You have successfully deleted the group: "%s".' % str(group.name))
+    except:
         db.session.rollback()
-        flash('failed to delete the group: "%s".' %
-              str(group.name))
-    return redirect(url_for('admin.list_groups'))
+        flash('failed to delete the group: "%s".' % str(group.name))
+    return redirect(url_for('admin.groups'))
 
 
 @admin.route('/roles')
 @signed_session
-def list_roles():
+def roles():
     """
     List all roles.
     :return:
     """
     check_admin()
     roles = Role.query.all()
-    return render_template('admin/roles/list_roles.html',
+    return render_template('admin/roles/roles.html',
                            title='Roles',
                            roles=roles)
 
@@ -145,16 +139,14 @@ def add_role():
         try:
             db.session.add(role)
             db.session.commit()
-            flash('Successfully added a new role: "%s".' %
-                  str(role.name))
-        except AttributeError:
+            flash('Successfully added a new role: "%s".' % str(role.name))
+        except:
             db.session.rollback()
-            flash('Error: role name already exists: "%s".' %
-                  str(role.name))
-        return redirect(url_for('admin.list_roles'))
+            flash('Failed to add a new role: "%s".' % str(role.name))
+        return redirect(url_for('admin.roles'))
     return render_template('admin/roles/add_role.html',
                            title='Add Role',
-                           form=form)  # type: RoleForm
+                           form=form)
 
 
 @admin.route('/roles/edit/role-<int:id>', methods=['GET', 'POST'])
@@ -174,13 +166,11 @@ def edit_role(id):
         try:
             db.session.add(role)
             db.session.commit()
-            flash('Successfully edited the role: "%s".' %
-                  str(role.name))
-        except AttributeError:
+            flash('Successfully edited the role: "%s".' % str(role.name))
+        except:
             db.session.rollback()
-            flash('failed to edit the role: "%s".' %
-                  str(role.name))
-        return redirect(url_for('admin.list_roles'))
+            flash('failed to edit the role: "%s".' % str(role.name))
+        return redirect(url_for('admin.roles'))
     form.description.data = role.description
     form.name.data = role.name
     return render_template('admin/roles/edit_role.html',
@@ -201,25 +191,23 @@ def delete_role(id):
     try:
         db.session.delete(role)
         db.session.commit()
-        flash('Successfully deleted the role: "%s".' %
-              str(role.name))
-    except AttributeError:
+        flash('Successfully deleted the role: "%s".' % str(role.name))
+    except:
         db.session.rollback()
-        flash('Failed to delete the role: "%s".' %
-              str(role.name))
-    return redirect(url_for('admin.list_roles'))
+        flash('Failed to delete the role: "%s".' % str(role.name))
+    return redirect(url_for('admin.roles'))
 
 
 @admin.route('/tools', methods=['GET', 'POST'])
 @signed_session
-def list_tools():
+def tools():
     """
     List all tools.
     :return:
     """
     check_admin()
     tools = Tool.query.all()
-    return render_template('admin/tools/list_tools.html',
+    return render_template('admin/tools/tools.html',
                            title='Tools',
                            tools=tools)
 
@@ -239,13 +227,11 @@ def add_tool():
         try:
             db.session.add(tool)
             db.session.commit()
-            flash('Successfully added a new tool: "%s".' %
-                  str(tool.name))
-        except AttributeError:
+            flash('Successfully added a new tool: "%s".' % str(tool.name))
+        except:
             db.session.rollback()
-            flash('Failed to add the tool: "%s".' %
-                  str(tool.name))
-        return redirect(url_for('admin.list_tools'))
+            flash('Failed to add the tool: "%s".' % str(tool.name))
+        return redirect(url_for('admin.tools'))
     return render_template('admin/tools/add_tool.html',
                            title='Add Tool',
                            action='Add',
@@ -269,13 +255,11 @@ def edit_tool(id):
         try:
             db.session.add(tool)
             db.session.commit()
-            flash('Successfully edited the tool: "%s".' %
-                  str(tool.name))
-        except AttributeError:
+            flash('Successfully edited the tool: "%s".' % str(tool.name))
+        except:
             db.session.rollback()
-            flash('Failed to edit the tool: "%s".' %
-                  str(tool.name))
-        return redirect(url_for('admin.list_tools'))
+            flash('Failed to edit the tool: "%s".' % str(tool.name))
+        return redirect(url_for('admin.tools'))
     form.name.data = tool.name
     form.description.data = tool.description
     return render_template('admin/tools/edit_tool.html',
@@ -299,23 +283,23 @@ def delete_tool(id):
         db.session.commit()
         flash('Successfully deleted the tool: "%s".' %
               str(tool.name))
-    except AttributeError:
+    except:
         db.session.rollback()
         flash('Failed to delete to tool: "%s".' %
               str(tool.name))
-    return redirect(url_for('admin.list_tools'))
+    return redirect(url_for('admin.tools'))
 
 
 @admin.route('/users')
 @signed_session
-def list_users():
+def users():
     """
     List all users.
     :return:
     """
     check_admin()
     users = User.query.all()
-    return render_template('admin/users/list_users.html',
+    return render_template('admin/users/users.html',
                            title='Users',
                            users=users)
 
@@ -336,20 +320,24 @@ def edit_user(id):
         user.name = form.name.data
         user.first_name = form.first_name.data
         user.last_name = form.last_name.data
+        user.is_admin = form.is_admin.data
+        user.is_valid = form.is_valid.data
+        user.is_blocked = form.is_blocked.data
         try:
             db.session.add(user)
             db.session.commit()
-            flash('Successfully edited the user: "%s".' %
-                  str(user.name))
-        except AttributeError:
+            flash('Successfully edited the user: "%s".' % str(user.name))
+        except:
             db.session.rollback()
-            flash('Failed to edit the user: "%s".' %
-                  str(user.name))
-        return redirect(url_for('admin.list_users'))
+            flash('Failed to edit the user: "%s".' % str(user.name))
+        return redirect(url_for('admin.users'))
     form.email.data = user.email
     form.name.data = user.name
     form.first_name.data = user.first_name
     form.last_name.data = user.last_name
+    form.is_admin.data = user.is_admin
+    form.is_valid.data = user.is_valid
+    form.is_blocked.data = user.is_blocked
     return render_template('admin/users/edit_user.html',
                            title='Edit User',
                            user=user,
@@ -364,32 +352,30 @@ def assign_user(id):
     :param id:
     :return:
     """
-    check_admin()
+    check_admin()                                                           
     user = User.query.get_or_404(id)
     if user.is_admin:
         abort(403)
     form = UserForm(obj=user)
-    if form.validate_on_submit():
-        user.group = form.group.data  # type: UserForm
-        user.role = form.role.data
-        try:
-            db.session.add(user)
-            db.session.commit()
-            flash('Successfully assigned "%s" to "%s" as "%s".' %
-                  (str(user.name),
-                   str(user.group),
-                   str(user.role)))
-        except AttributeError:
-            db.session.rollback()
-            flash('Failed to assign group and role to: "%s".' %
-                  str(user.name))
-        return redirect(url_for('admin.list_users'))
+    # if form.validate_on_submit():
+    user.group = form.group.data
+    user.role = form.role.data
+    try:
+        db.session.add(user)
+        db.session.commit()
+        flash('Successfully assigned "%s" to "%s" as "%s".' % (str(user.name),
+                                                               str(user.group.name),
+                                                               str(user.role.name)))
+    except:
+        db.session.rollback()
+        flash('Failed to assign group and role to: "%s".' % str(user.name))
+    # return redirect(url_for('admin.users'))
     form.group.data = user.group
     form.role.data = user.role
     return render_template('admin/users/assign_user.html',
                            title='Assign User',
                            user=user,
-                           form=form)  # type: UserForm
+                           form=form)
 
 
 @admin.route('/users/delete/user-<int:id>', methods=['GET', 'POST'])
@@ -407,10 +393,8 @@ def delete_user(id):
     try:
         db.session.delete(user)
         db.session.commit()
-        flash('Successfully deleted the user: "%s".' %
-              str(user.name))
-    except AttributeError:
+        flash('Successfully deleted the user: "%s".' % str(user.name))
+    except:
         db.session.rollback()
-        flash('Failed to delete the user: "%s".' %
-              str(user.name))
-    return redirect(url_for('admin.list_users'))
+        flash('Failed to delete the user: "%s".' % str(user.name))
+    return redirect(url_for('admin.users'))

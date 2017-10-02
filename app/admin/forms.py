@@ -2,7 +2,7 @@
 # app/admin/forms.py
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField  # , BooleanField
+from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Email
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
@@ -22,6 +22,9 @@ class UserForm(FlaskForm):
                              get_label='name')
     role = QuerySelectField(query_factory=lambda: Role.query.all(),
                             get_label='name')
+    is_admin = BooleanField('Is Admin')
+    is_valid = BooleanField('Is Valid')
+    is_blocked = BooleanField('Is Blocked')
     submit = SubmitField('Submit')
 
 

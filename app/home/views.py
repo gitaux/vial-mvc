@@ -2,14 +2,13 @@
 # app/home/views.py
 
 from flask import abort, render_template
-from flask_login import current_user
-from flask_login import login_required as signed_session
+from flask_login import current_user, login_required as signed_session
 
 from . import home
 
 
 @home.route('/')
-def welcome_home():
+def welcome():
     """
     Render the homepage template on the / route
     :return:
@@ -19,7 +18,7 @@ def welcome_home():
 
 @home.route('/home')
 @signed_session
-def user_home():
+def start():
     """
     Render the frontend template on the /home route.
     :return:
@@ -29,7 +28,7 @@ def user_home():
 
 @home.route('/admin/home')
 @signed_session
-def admin_home():
+def admin():
     if not current_user.is_admin:
         abort(403)
     return render_template('home/admin.html', title='Admin')
