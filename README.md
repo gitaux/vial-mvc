@@ -1,4 +1,6 @@
 # Auxillary Flask App
+> Version: 0.1.4
+
 1. git clone repository
 2. create virtual environment
 3. install requirements.txt
